@@ -102,7 +102,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 row1_left, row1_right = st.columns([1, 1], gap="medium")
 with row1_left:
     st.markdown(f'<div class="section-title">{ICONS["trend"]} Tren Konsentrasi Rata-rata PM2.5 Bulanan</div>', unsafe_allow_html=True)
-    monthly_trend = filtered_df.set_index('datetime').resample('M')['PM2.5'].mean().reset_index()
+    monthly_trend = filtered_df.set_index('datetime').resample('ME')['PM2.5'].mean().reset_index()
     fig1, ax1 = plt.subplots(figsize=(6, 3.9))
     ax1.plot(monthly_trend['datetime'], monthly_trend['PM2.5'], color='#1f77b4', linewidth=2, marker='o', markersize=3)
     ax1.axhline(y=15, color='#2ecc71', linestyle='--', linewidth=1.5, label='Baku Mutu WHO (15 µg/m³)')
