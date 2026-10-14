@@ -138,12 +138,24 @@ with col_a:
     category_order = ['Good', 'Moderate', 'Unhealthy for Sensitive', 'Unhealthy', 'Very Unhealthy', 'Hazardous']
     aqi_counts = filtered_df['AQI_Category'].value_counts().reindex(category_order, fill_value=0)
     
-    fig3, ax3 = plt.subplots(figsize=(6, 4.2))
-    aqi_colors = ['#2ecc71', '#f39c12', '#e67e22', '#e74c3c', '#c0392b', '#7f0000']
-    aqi_counts.plot(kind='bar', ax=ax3, color=aqi_colors, edgecolor='black', alpha=0.85)
-    ax3.set_ylabel("Frekuensi (Jam)", fontsize=10)
-    ax3.set_xticklabels(ax3.get_xticklabels(), rotation=35, ha='right', fontsize=9)
+    # Base color seragam + Highlight bar tertinggi (Sesuai Prinsip Desain Integritas)
+    max_cat = aqi_counts.idxmax() if not aqi_counts.empty else None
+    bar_colors = ['#d32f2f' if cat == max_cat else '#b0bec5' for cat in category_order]
+    fig3, ax3 = plt.subplots(figsize=(6, 4.1))
+    bars = ax3.bar(category_order, aqi_counts, color=bar_colors, edgecolor='black', linewidth=0.8)
+    
+    ax3.set_ylabel("Frekuensi (Jam)", fontsize=9)
+    ax3.set_xticklabels(category_order, rotation=35, ha='right', fontsize=8.5)
     ax3.grid(True, axis='y', linestyle=':', alpha=0.5)
+    
+    # Label angka di atas batang
+    for bar in bars:
+        h = bar.get_height()
+        if h > 0:
+            ax3.annotate(f'{int(h):,}', (bar.get_x() + bar.get_width()/2., h), 
+                         ha='center', va='bottom', xytext=(0, 2), textcoords='offset points', fontsize=7.5)
+            
+    plt.tight_layout()
     st.pyplot(fig3)
 
 with col_b:
