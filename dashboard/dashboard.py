@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import folium
 from streamlit_folium import st_folium
+import os
 
 # Konfigurasi Halaman
 st.set_page_config(
@@ -55,10 +56,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Load Data
+# Load Data Menggunakan Absolute Path Dinamis
 @st.cache_data
 def load_data():
-    df = pd.read_csv('main_data.csv')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'main_data.csv')
+    
+    # Fallback jika file berada di root repo
+    if not os.path.exists(file_path):
+        file_path = 'main_data.csv'
+        
+    df = pd.read_csv(file_path)
     df['datetime'] = pd.to_datetime(df['datetime'])
     return df
 
